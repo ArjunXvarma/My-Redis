@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.16)
+
+# Set project name and C++ standard
+project(MyProjectName VERSION 0.1 LANGUAGES CXX)
+
+# Set the C++ standard explicitly
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Force use of Clang on macOS
+if(APPLE)
+    set(CMAKE_C_COMPILER /usr/bin/clang)
+    set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+endif()
+
+# Set compile flags for Clang on macOS
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(STATUS "Using Clang compiler")
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+endif()
+
+# Define the executable and source files
+add_executable(MyExecutable
+    src/main.cpp
+    # Add more source files here
+)
+
+# Include directories if needed
+# target_include_directories(MyExecutable PRIVATE include)
+
+# Link libraries if needed
+# target_link_libraries(MyExecutable PRIVATE some_library)
