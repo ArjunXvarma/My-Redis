@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(redis_clone)
+project(my_redis)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -20,13 +20,13 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 list(FILTER SOURCES EXCLUDE REGEX ".*/client/.*")
 
 # Add the executable
-add_executable(redis_clone ${SOURCES})
+add_executable(my_redis ${SOURCES})
 
 # Optional: Add warnings and optimization flags
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    target_compile_options(redis_clone PRIVATE -Wall -Wextra -g)
+    target_compile_options(my_redis PRIVATE -Wall -Wextra -g)
 else()
-    target_compile_options(redis_clone PRIVATE -Wall -Wextra -O2)
+    target_compile_options(my_redis PRIVATE -Wall -Wextra -O2)
 endif()
 
 # Optional: Add tests if you want

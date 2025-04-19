@@ -8,20 +8,9 @@ using namespace std;
 
 class DataStore {
 public:
-    static DataStore& getInstance() {
-        static DataStore instance;
-        return instance;
-    }
-
-    void set(const std::string& key, const string& value) {
-        store[key] = value;
-    }
-
-    optional<string> get(const string& key) const {
-        auto it = store.find(key);
-        if (it != store.end()) return it->second;
-        return nullopt;
-    }
+    static DataStore& getInstance();
+    void set(const string& key, const string& value);
+    optional<string> get(const string& key) const;
 
 private:
     unordered_map<string, string> store;
