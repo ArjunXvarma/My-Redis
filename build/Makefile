@@ -116,6 +116,211 @@ depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named redis_clone
+
+# Build rule for target.
+redis_clone: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 redis_clone
+.PHONY : redis_clone
+
+# fast build rule for target.
+redis_clone/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/build
+.PHONY : redis_clone/fast
+
+src/command/commandDispatcher.o: src/command/commandDispatcher.cpp.o
+.PHONY : src/command/commandDispatcher.o
+
+# target to build an object file
+src/command/commandDispatcher.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commandDispatcher.cpp.o
+.PHONY : src/command/commandDispatcher.cpp.o
+
+src/command/commandDispatcher.i: src/command/commandDispatcher.cpp.i
+.PHONY : src/command/commandDispatcher.i
+
+# target to preprocess a source file
+src/command/commandDispatcher.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commandDispatcher.cpp.i
+.PHONY : src/command/commandDispatcher.cpp.i
+
+src/command/commandDispatcher.s: src/command/commandDispatcher.cpp.s
+.PHONY : src/command/commandDispatcher.s
+
+# target to generate assembly for a file
+src/command/commandDispatcher.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commandDispatcher.cpp.s
+.PHONY : src/command/commandDispatcher.cpp.s
+
+src/command/commands/echoCmd.o: src/command/commands/echoCmd.cpp.o
+.PHONY : src/command/commands/echoCmd.o
+
+# target to build an object file
+src/command/commands/echoCmd.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/echoCmd.cpp.o
+.PHONY : src/command/commands/echoCmd.cpp.o
+
+src/command/commands/echoCmd.i: src/command/commands/echoCmd.cpp.i
+.PHONY : src/command/commands/echoCmd.i
+
+# target to preprocess a source file
+src/command/commands/echoCmd.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/echoCmd.cpp.i
+.PHONY : src/command/commands/echoCmd.cpp.i
+
+src/command/commands/echoCmd.s: src/command/commands/echoCmd.cpp.s
+.PHONY : src/command/commands/echoCmd.s
+
+# target to generate assembly for a file
+src/command/commands/echoCmd.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/echoCmd.cpp.s
+.PHONY : src/command/commands/echoCmd.cpp.s
+
+src/command/commands/getCmd.o: src/command/commands/getCmd.cpp.o
+.PHONY : src/command/commands/getCmd.o
+
+# target to build an object file
+src/command/commands/getCmd.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/getCmd.cpp.o
+.PHONY : src/command/commands/getCmd.cpp.o
+
+src/command/commands/getCmd.i: src/command/commands/getCmd.cpp.i
+.PHONY : src/command/commands/getCmd.i
+
+# target to preprocess a source file
+src/command/commands/getCmd.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/getCmd.cpp.i
+.PHONY : src/command/commands/getCmd.cpp.i
+
+src/command/commands/getCmd.s: src/command/commands/getCmd.cpp.s
+.PHONY : src/command/commands/getCmd.s
+
+# target to generate assembly for a file
+src/command/commands/getCmd.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/getCmd.cpp.s
+.PHONY : src/command/commands/getCmd.cpp.s
+
+src/command/commands/pingCmd.o: src/command/commands/pingCmd.cpp.o
+.PHONY : src/command/commands/pingCmd.o
+
+# target to build an object file
+src/command/commands/pingCmd.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/pingCmd.cpp.o
+.PHONY : src/command/commands/pingCmd.cpp.o
+
+src/command/commands/pingCmd.i: src/command/commands/pingCmd.cpp.i
+.PHONY : src/command/commands/pingCmd.i
+
+# target to preprocess a source file
+src/command/commands/pingCmd.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/pingCmd.cpp.i
+.PHONY : src/command/commands/pingCmd.cpp.i
+
+src/command/commands/pingCmd.s: src/command/commands/pingCmd.cpp.s
+.PHONY : src/command/commands/pingCmd.s
+
+# target to generate assembly for a file
+src/command/commands/pingCmd.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/pingCmd.cpp.s
+.PHONY : src/command/commands/pingCmd.cpp.s
+
+src/command/commands/setCmd.o: src/command/commands/setCmd.cpp.o
+.PHONY : src/command/commands/setCmd.o
+
+# target to build an object file
+src/command/commands/setCmd.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/setCmd.cpp.o
+.PHONY : src/command/commands/setCmd.cpp.o
+
+src/command/commands/setCmd.i: src/command/commands/setCmd.cpp.i
+.PHONY : src/command/commands/setCmd.i
+
+# target to preprocess a source file
+src/command/commands/setCmd.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/setCmd.cpp.i
+.PHONY : src/command/commands/setCmd.cpp.i
+
+src/command/commands/setCmd.s: src/command/commands/setCmd.cpp.s
+.PHONY : src/command/commands/setCmd.s
+
+# target to generate assembly for a file
+src/command/commands/setCmd.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/command/commands/setCmd.cpp.s
+.PHONY : src/command/commands/setCmd.cpp.s
+
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
+src/server/clientHandler.o: src/server/clientHandler.cpp.o
+.PHONY : src/server/clientHandler.o
+
+# target to build an object file
+src/server/clientHandler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/server/clientHandler.cpp.o
+.PHONY : src/server/clientHandler.cpp.o
+
+src/server/clientHandler.i: src/server/clientHandler.cpp.i
+.PHONY : src/server/clientHandler.i
+
+# target to preprocess a source file
+src/server/clientHandler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/server/clientHandler.cpp.i
+.PHONY : src/server/clientHandler.cpp.i
+
+src/server/clientHandler.s: src/server/clientHandler.cpp.s
+.PHONY : src/server/clientHandler.s
+
+# target to generate assembly for a file
+src/server/clientHandler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/server/clientHandler.cpp.s
+.PHONY : src/server/clientHandler.cpp.s
+
+src/server/server.o: src/server/server.cpp.o
+.PHONY : src/server/server.o
+
+# target to build an object file
+src/server/server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/server/server.cpp.o
+.PHONY : src/server/server.cpp.o
+
+src/server/server.i: src/server/server.cpp.i
+.PHONY : src/server/server.i
+
+# target to preprocess a source file
+src/server/server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/server/server.cpp.i
+.PHONY : src/server/server.cpp.i
+
+src/server/server.s: src/server/server.cpp.s
+.PHONY : src/server/server.s
+
+# target to generate assembly for a file
+src/server/server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/redis_clone.dir/build.make CMakeFiles/redis_clone.dir/src/server/server.cpp.s
+.PHONY : src/server/server.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -124,6 +329,31 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... redis_clone"
+	@echo "... src/command/commandDispatcher.o"
+	@echo "... src/command/commandDispatcher.i"
+	@echo "... src/command/commandDispatcher.s"
+	@echo "... src/command/commands/echoCmd.o"
+	@echo "... src/command/commands/echoCmd.i"
+	@echo "... src/command/commands/echoCmd.s"
+	@echo "... src/command/commands/getCmd.o"
+	@echo "... src/command/commands/getCmd.i"
+	@echo "... src/command/commands/getCmd.s"
+	@echo "... src/command/commands/pingCmd.o"
+	@echo "... src/command/commands/pingCmd.i"
+	@echo "... src/command/commands/pingCmd.s"
+	@echo "... src/command/commands/setCmd.o"
+	@echo "... src/command/commands/setCmd.i"
+	@echo "... src/command/commands/setCmd.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
+	@echo "... src/server/clientHandler.o"
+	@echo "... src/server/clientHandler.i"
+	@echo "... src/server/clientHandler.s"
+	@echo "... src/server/server.o"
+	@echo "... src/server/server.i"
+	@echo "... src/server/server.s"
 .PHONY : help
 
 

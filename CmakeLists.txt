@@ -1,33 +1,33 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
+project(redis_clone)
 
-# Set project name and C++ standard
-project(MyProjectName VERSION 0.1 LANGUAGES CXX)
-
-# Set the C++ standard explicitly
+# Set the C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Force use of Clang on macOS
-if(APPLE)
-    set(CMAKE_C_COMPILER /usr/bin/clang)
-    set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+# Specify the compiler
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_C_COMPILER clang)
+
+# Output all binaries to build/bin/
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Include directories for header files
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# Include all source files in the src directory, excluding the client directory
+file(GLOB_RECURSE SOURCES src/*.cpp)
+list(FILTER SOURCES EXCLUDE REGEX ".*/client/.*")
+
+# Add the executable
+add_executable(redis_clone ${SOURCES})
+
+# Optional: Add warnings and optimization flags
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    target_compile_options(redis_clone PRIVATE -Wall -Wextra -g)
+else()
+    target_compile_options(redis_clone PRIVATE -Wall -Wextra -O2)
 endif()
 
-# Set compile flags for Clang on macOS
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(STATUS "Using Clang compiler")
-    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-endif()
-
-# Define the executable and source files
-add_executable(MyExecutable
-    src/main.cpp
-    # Add more source files here
-)
-
-# Include directories if needed
-# target_include_directories(MyExecutable PRIVATE include)
-
-# Link libraries if needed
-# target_link_libraries(MyExecutable PRIVATE some_library)
+# Optional: Add tests if you want
+# add_subdirectory(tests)

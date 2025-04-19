@@ -145,7 +145,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=MyProjectName
+CMAKE_PROJECT_NAME:STATIC=redis_clone
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION:STATIC=0.1
@@ -253,6 +253,15 @@ Project_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 Project_SOURCE_DIR:STATIC=/Users/arjunvarma/Desktop/Programs/C++/Redis/My-Redis
+
+//Value Computed by CMake
+redis_clone_BINARY_DIR:STATIC=/Users/arjunvarma/Desktop/Programs/C++/Redis/My-Redis/build
+
+//Value Computed by CMake
+redis_clone_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+redis_clone_SOURCE_DIR:STATIC=/Users/arjunvarma/Desktop/Programs/C++/Redis/My-Redis
 
 
 ########################
