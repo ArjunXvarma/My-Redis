@@ -7,7 +7,7 @@
 using namespace std;
 
 void sendCommand(int clientSocket, const string& command) {
-    send(clientSocket, command.c_str(), command.length() + 1, 0);
+    send(clientSocket, command.c_str(), command.length(), 0);
 
     char buffer[1024] = {0};
     int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
@@ -30,23 +30,23 @@ int main() {
 
     // Test PING command
     cout << "Testing PING command..." << endl;
-    sendCommand(clientSocket, "PING");
+    sendCommand(clientSocket, "*1\r\n$4\r\nPING\r\n");
 
     // Test ECHO command
     cout << "Testing ECHO command..." << endl;
-    sendCommand(clientSocket, "ECHO Hello, Redis!");
+    sendCommand(clientSocket, "*2\r\n$4\r\nECHO\r\n$13\r\nHello, Redis!\r\n");
 
     // Test SET command
     cout << "Testing SET command..." << endl;
-    sendCommand(clientSocket, "SET key1 value1");
+    sendCommand(clientSocket, "*3\r\n$3\r\nSET\r\n$4\r\nkey1\r\n$6\r\nvalue1\r\n");
 
     // Test GET command
     cout << "Testing GET command..." << endl;
-    sendCommand(clientSocket, "GET key1");
+    sendCommand(clientSocket, "*2\r\n$3\r\nGET\r\n$4\r\nkey1\r\n");
 
     // Test unknown command
     cout << "Testing unknown command..." << endl;
-    sendCommand(clientSocket, "UNKNOWN");
+    sendCommand(clientSocket, "*1\r\n$7\r\nUNKNOWN\r\n");
 
     close(clientSocket);
     return 0;

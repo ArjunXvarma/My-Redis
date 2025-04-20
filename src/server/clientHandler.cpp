@@ -1,8 +1,9 @@
 #include <sstream>
+#include <iostream>
 #include <vector>
-#include <sys/socket.h> // For recv and send
-#include <unistd.h>     // For close
-#include <cstring>      // For memset (if needed)
+#include <sys/socket.h> 
+#include <unistd.h>
+#include <cstring>
 #include "server/clientHandler.hpp"
 
 using namespace std;
@@ -13,13 +14,19 @@ bool ClientHandler::handle(int clientSocket) {
     if (bytesReceived <= 0) return false;
 
     string input(buffer);
-    istringstream iss(input);
-    vector<string> tokens;
-    string token;
-    while (iss >> token) tokens.push_back(token);
+
+    auto tokens = RESPParser::parse(input);
+    
+    if (tokens.empty()) {
+        string error = RESPEncoder::encodeError("Invalid command");
+        send(clientSocket, error.c_str(), error.size(), 0);
+        return true;
+    }
 
     CommandDispatcher dispatcher;
     string response = dispatcher.dispatch(tokens);
-    send(clientSocket, response.c_str(), response.length(), 0);
+    string encoded = RESPEncoder::encodeBulkString(response); // OR encodeBulkString
+    send(clientSocket, encoded.c_str(), encoded.size(), 0);
+
     return true;
 }
