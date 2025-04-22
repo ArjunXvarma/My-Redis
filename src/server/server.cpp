@@ -1,4 +1,8 @@
 #include "server/server.hpp"
+#include "persistence/persistenceManager.hpp"
+#include <fstream>
+
+string dumpFileName = "../dump.rdb";
 
 int setNonBlocking(int fd) {
     int flags = fcntl(fd, F_GETFL, 0);
@@ -23,6 +27,16 @@ int setupServerSocket(int port) {
 }
 
 void Server::start(int port) {
+    cout << "[Server] Starting server..." << endl;
+    
+    ofstream dumpFile(dumpFileName, ios::trunc);
+    if (!dumpFile.is_open()) {
+        cerr << "[Server] Failed to initialize dump.rdb file in the root directory." << endl;
+        return;
+    }
+    cout << "[Server] Initialized dump.rdb file in the root directory." << endl;
+    dumpFile.close();
+
     int serverSocket = setupServerSocket(port);
     cout << "Listening on port " << port << "...\n";
 
