@@ -11,11 +11,9 @@ void sendCommand(int clientSocket, const string& command) {
 
     char buffer[1024] = {0};
     int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
-    if (bytesReceived > 0) {
-        cout << "Response: " << buffer << endl;
-    } else {
-        cout << "No response from server" << endl;
-    }
+    
+    if (bytesReceived > 0) cout << "Response: " << buffer << endl;
+    else cout << "No response from server" << endl;
 }
 
 int main() {
