@@ -27,7 +27,7 @@ void EPollLoop::removeSocket(int fd) {
     }
 }
 
-void EPollLoop::run() {
+void EPollLoop::run(function<int(int)> eventHandler) {
     const int MAX_EVENTS = 1024;
     struct epoll_event events[MAX_EVENTS];
 
@@ -41,8 +41,9 @@ void EPollLoop::run() {
 
         for (size_t i = 0; i < nfds; i++) {
             int fd = events[i].data.fd;
-
-            cout << "Handling event" << endl;
+            int result = eventHandler(fd);
+            if (result > 0) addSocket(result);
+            else if (result < 0) removeSocket(fd);
         }
     }
 }
