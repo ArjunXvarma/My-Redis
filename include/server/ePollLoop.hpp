@@ -1,20 +1,24 @@
-#include "eventLoop.hpp"
 #include <sys/epoll.h>
 #include <unistd.h>
 #include <iostream>
 #include <functional>
+#include <sys/epoll.h>
+#include <stdexcept>
+
+#include "eventLoop.hpp"
 
 using namespace std;
 
 class EPollLoop : public EventLoop {
 private:
     int epollFd;
+    int serverSocketFd;
 public:
-    EPollLoop();
+    EPollLoop(int serverSocketFd);
     
-    void addSocket(int fd) override;
-    void removeSocket(int fd) override;
-    void run(function<int(int)> eventHandler) override;
+    void addEvent(int fd, uint32_t events) override;
+    void removeEvent(int fd) override;
+    void run() override;
 
     ~EPollLoop() override;
 };

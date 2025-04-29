@@ -9,12 +9,13 @@ using namespace std;
 class KQueueLoop : public EventLoop {
 private:
     int kq;
+    int serverSocketFd;
 public:
-    KQueueLoop();
+    KQueueLoop(int serverSocketFd);
     
-    void addSocket(int fd) override;
-    void removeSocket(int fd) override;
-    void run(function<int(int)> eventHandler) override;
+    void addEvent(int fd, uint32_t events) override;
+    void removeEvent(int fd) override;
+    void run() override;
 
     ~KQueueLoop() override;
 };
