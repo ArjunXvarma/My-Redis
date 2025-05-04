@@ -12,7 +12,7 @@ public:
     static DataStore& getInstance();
     void set(const std::string& key, const std::string& value);
     void del(const std::string& key);
-    optional<string> get(const std::string& key) const;
+    std::optional<std::string> get(const std::string& key) const;
     void save();
 
 private:

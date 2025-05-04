@@ -2,19 +2,19 @@
 #include <fstream>
 #include <iostream>
 
-unordered_map<string, string> PersistenceManager::load() {
-    extern string dumpFileName;
+std::unordered_map<std::string, std::string> PersistenceManager::load() {
+    extern std::string dumpFileName;
     
-    unordered_map<string, string> data;
-    ifstream file(dumpFileName);
-    cout << "[Persistence] Loading data from '" << dumpFileName << "'..." << endl;
+    std::unordered_map<std::string, std::string> data;
+    std::ifstream file(dumpFileName);
+    std::cout << "[Persistence] Loading data from '" << dumpFileName << "'..." << std::endl;
     
     if (!file.is_open()) {
-        cout << "[Persistence] No file found at '" << dumpFileName << "'. Starting fresh." << endl;
+        std::cout << "[Persistence] No file found at '" << dumpFileName << "'. Starting fresh." << std::endl;
         return data;
     }
 
-    string key, value;
+    std::string key, value;
     while (file >> key >> value) {
         data[key] = value;
     }
@@ -23,18 +23,18 @@ unordered_map<string, string> PersistenceManager::load() {
     return data;
 }
 
-void PersistenceManager::save(const unordered_map<string, string>& data) {
-    extern string dumpFileName;
-    ofstream file(dumpFileName, ios::trunc);
+void PersistenceManager::save(const std::unordered_map<std::string, std::string>& data) {
+    extern std::string dumpFileName;
+    std::ofstream file(dumpFileName, std::ios::trunc);
     if (!file.is_open()) {
-        cerr << "[Persistence] Failed to open file: " << dumpFileName << endl;
+        std::cerr << "[Persistence] Failed to open file: " << dumpFileName << std::endl;
         return;
     }
 
     for (const auto& [key, value] : data) {
-        file << key << " " << value << endl;
+        file << key << " " << value << std::endl;
     }
 
-    cout << "[Persistence] Data saved to " << dumpFileName << endl;
+    std::cout << "[Persistence] Data saved to " << dumpFileName << std::endl;
     file.close();
 }

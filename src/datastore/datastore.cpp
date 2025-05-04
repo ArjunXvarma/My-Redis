@@ -1,7 +1,7 @@
 #include "datastore/datastore.hpp"
 
 DataStore::DataStore() {
-    extern string dumpFileName;
+    extern std::string dumpFileName;
     store = PersistenceManager::load();
 }
 
@@ -20,10 +20,10 @@ void DataStore::del(const std::string& key) {
     save();
 }
 
-optional<string> DataStore::get(const std::string& key) const {
+std::optional<std::string> DataStore::get(const std::string& key) const {
     auto it = store.find(key);
     if (it != store.end()) return it->second;
-    return nullopt;
+    return std::nullopt;
 }
 
 void DataStore::save() {
