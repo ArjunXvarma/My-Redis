@@ -1,5 +1,6 @@
 #include "server/ePollLoop.hpp"
 
+#ifdef __linux__
 EPollLoop::EPollLoop(int serverSocketFd) 
     : serverSocketFd(serverSocketFd), epollFd(epoll_create1(0)) {
     if (epollFd == -1) {
@@ -29,7 +30,6 @@ void EPollLoop::removeEvent(int fd) {
 }
 
 void EPollLoop::run() {
-    const int MAX_EVENTS = 1024;
     struct epoll_event events[MAX_EVENTS];
 
     while (true) {
@@ -71,5 +71,7 @@ void EPollLoop::run() {
 }
 
 EPollLoop::~EPollLoop() {
-    close(epollFd);
+    
 }
+
+#endif

@@ -13,13 +13,14 @@ bool ClientHandler::handle(int clientSocket) {
     ssize_t bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0); // -1 for null terminator
 
     if (bytesReceived == 0) {
-        std::cout << "Client disconnected." << std::endl;
+        cout << "Client disconnected." << endl;
         return false; // socket closed by client
-    } else if (bytesReceived < 0) {
-        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-            // Nothing to read right now; just return true and wait for next event
-            return true;
-        } else {
+    } 
+    
+    else if (bytesReceived < 0) {
+        if (errno == EAGAIN || errno == EWOULDBLOCK) return true;
+        
+        else {
             perror("recv");
             return false; // genuine error
         }

@@ -8,8 +8,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "clientHandler.hpp"
+#include <fcntl.h>
 
 using namespace std;
+
+#define MAX_EVENTS 1024
 
 class EventLoop {
 private:

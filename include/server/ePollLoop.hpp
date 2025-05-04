@@ -1,11 +1,17 @@
+#pragma once
+
+#include "eventLoop.hpp"
+#ifdef __linux__
 #include <sys/epoll.h>
 #include <unistd.h>
 #include <iostream>
 #include <functional>
-#include <sys/epoll.h>
-#include <stdexcept>
-
-#include "eventLoop.hpp"
+#include <iostream>
+#include <cstring>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 using namespace std;
 
@@ -22,3 +28,5 @@ public:
 
     ~EPollLoop() override;
 };
+
+#endif
