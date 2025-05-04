@@ -1,7 +1,7 @@
 #include "protocol/RESPparser.hpp"
 
-vector<string> RESPParser::parse(const string& input) {
-    vector<string> result;
+std::vector<std::string> RESPParser::parse(const std::string& input) {
+    std::vector<std::string> result;
     size_t i = 0;
 
     if (input[i] != '*') return result;  
@@ -9,7 +9,7 @@ vector<string> RESPParser::parse(const string& input) {
 
     // Parse array length
     size_t arrayLenEnd = input.find("\r\n", i);
-    int count = stoi(input.substr(i, arrayLenEnd - i));
+    int count = std::stoi(input.substr(i, arrayLenEnd - i));
     i = arrayLenEnd + 2;
 
     for (int k = 0; k < count; ++k) {
@@ -20,7 +20,7 @@ vector<string> RESPParser::parse(const string& input) {
         int len = stoi(input.substr(i, lenEnd - i));
         i = lenEnd + 2;
 
-        string arg = input.substr(i, len);
+        std::string arg = input.substr(i, len);
         result.push_back(arg);
         i += len + 2; 
     }

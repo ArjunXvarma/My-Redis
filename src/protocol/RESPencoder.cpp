@@ -1,13 +1,13 @@
 #include "protocol/RESPencoder.hpp"
 
-string RESPEncoder::encodeSimpleString(const string& value) {
+std::string RESPEncoder::encodeSimpleString(const std::string& value) {
     return "+" + value + "\r\n";
 }
 
-string RESPEncoder::encodeBulkString(const string& value) {
-    return "$" + to_string(value.size()) + "\r\n" + value + "\r\n";
+std::string RESPEncoder::encodeBulkString(const std::string& value) {
+    return "$" + std::to_string(value.size()) + "\r\n" + value + "\r\n";
 }
 
-string RESPEncoder::encodeError(const string& error) {
+std::string RESPEncoder::encodeError(const std::string& error) {
     return "-" + error + "\r\n";
 }
