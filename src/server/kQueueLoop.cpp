@@ -31,15 +31,15 @@ void KQueueLoop::run() {
     struct kevent events[MAX_EVENTS];
 
     while (true) {
-        cout << "[KQueueLoop] Waiting for events..." << endl;
+        std::cout << "[KQueueLoop] Waiting for events..." << std::endl;
         int eventCount = kevent(kq, nullptr, 0, events, MAX_EVENTS, nullptr);
         if (eventCount == -1) {
             throw std::runtime_error("Failed to wait for events");
         }
         
-        cout << "[KQueueLoop] " << eventCount << " events occurred." << endl;
+        std::cout << "[KQueueLoop] " << eventCount << " events occurred." << std::endl;
         for (int i = 0; i < eventCount; ++i) {
-            cout << "[KQueueLoop] Event " << i << ": FD " << events[i].ident << ", Filter " << events[i].filter << endl;
+            std::cout << "[KQueueLoop] Event " << i << ": FD " << events[i].ident << ", Filter " << events[i].filter << std::endl;
             if (events[i].ident == serverSocketFd) {
                 // Accept new connection
                 sockaddr_in client_addr;
@@ -60,7 +60,7 @@ void KQueueLoop::run() {
                 if (!ClientHandler::handle(events[i].ident)) {
                     removeEvent(events[i].ident);
                     close(events[i].ident);
-                    cout << "[KQueueLoop] Client disconnected: FD " << events[i].ident << endl;
+                    std::cout << "[KQueueLoop] Client disconnected: FD " << events[i].ident << std::endl;
                 }
             }
         }

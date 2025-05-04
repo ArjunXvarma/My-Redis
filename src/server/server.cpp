@@ -5,7 +5,7 @@
 #include <fstream>
 #include <arpa/inet.h> // Required for inet_pton
 
-string dumpFileName = "../dump.rdb";
+std::string dumpFileName = "../dump.rdb";
 
 int setupServerSocket(int port) {
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -36,18 +36,18 @@ int setupServerSocket(int port) {
 }
 
 void Server::start(int port) {
-    cout << "[Server] Starting server..." << endl;
+    std::cout << "[Server] Starting server..." << std::endl;
     
-    ofstream dumpFile(dumpFileName, ios::trunc);
+    std::ofstream dumpFile(dumpFileName, std::ios::trunc);
     if (!dumpFile.is_open()) {
-        cerr << "[Server] Failed to initialize dump.rdb file in the root directory." << endl;
+        std::cerr << "[Server] Failed to initialize dump.rdb file in the root directory." << std::endl;
         return;
     }
-    cout << "[Server] Initialized dump.rdb file in the root directory." << endl;
+    std::cout << "[Server] Initialized dump.rdb file in the root directory." << std::endl;
     dumpFile.close();
 
     int serverSocket = setupServerSocket(port);
-    cout << "Listening on port " << port << "...\n";
+    std::cout << "Listening on port " << port << "...\n";
 
     EventLoop* eventLoop;
     #ifdef __linux__
@@ -55,7 +55,7 @@ void Server::start(int port) {
     #elif defined(__APPLE__)
         eventLoop = new KQueueLoop(serverSocket);
     #else  
-        cerr << "[Server] Unsupported platform." << endl;
+        std::cerr << "[Server] Unsupported platform." << std::endl;
         return;
     #endif
 

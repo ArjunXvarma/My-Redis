@@ -10,8 +10,6 @@
 #include "clientHandler.hpp"
 #include <fcntl.h>
 
-using namespace std;
-
 #define MAX_EVENTS 1024
 
 class EventLoop {

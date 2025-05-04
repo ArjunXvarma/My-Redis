@@ -6,14 +6,12 @@
 #include <cstring>
 #include "server/clientHandler.hpp"
 
-using namespace std;
-
 bool ClientHandler::handle(int clientSocket) {
     char buffer[1024] = {0};
     ssize_t bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0); // -1 for null terminator
 
     if (bytesReceived == 0) {
-        cout << "Client disconnected." << endl;
+        std::cout << "Client disconnected." << std::endl;
         return false; // socket closed by client
     } 
     
@@ -27,19 +25,19 @@ bool ClientHandler::handle(int clientSocket) {
     }
 
     buffer[bytesReceived] = '\0';
-    string input(buffer);
+    std::string input(buffer);
 
     auto tokens = RESPParser::parse(input);
 
     if (tokens.empty()) {
-        string error = RESPEncoder::encodeError("Invalid or incomplete command");
+        std::string error = RESPEncoder::encodeError("Invalid or incomplete command");
         send(clientSocket, error.c_str(), error.size(), 0);
         return true;
     }
 
     CommandDispatcher dispatcher;
-    string response = dispatcher.dispatch(tokens);
-    string encoded = RESPEncoder::encodeBulkString(response);
+    std::string response = dispatcher.dispatch(tokens);
+    std::string encoded = RESPEncoder::encodeBulkString(response);
 
     size_t totalSent = 0;
     while (totalSent < encoded.size()) {
