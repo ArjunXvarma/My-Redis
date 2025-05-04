@@ -7,14 +7,17 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "clientHandler.hpp"
 #include <fcntl.h>
+
+#include "clientHandler.hpp"
+#include "utils/GlobalThreadPool.hpp"
+#include "utils/DeadFdQueue.hpp"
 
 #define MAX_EVENTS 1024
 
 class EventLoop {
 private:
-    int serverSocketFd;
+    uintptr_t serverSocketFd;
 public:
     virtual void addEvent(int fd, uint32_t events) = 0;
     virtual void removeEvent(int fd) = 0;

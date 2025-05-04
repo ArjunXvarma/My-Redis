@@ -11,6 +11,7 @@
 #include "commands/pingCmd.hpp"
 #include "commands/echoCmd.hpp"
 #include "../protocol/RESPencoder.hpp"
+#include "../utils/GlobalThreadPool.hpp"
 
 class CommandDispatcher {
 public:

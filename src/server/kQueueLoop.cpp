@@ -1,6 +1,9 @@
 #include "server/kQueueLoop.hpp"
 
 #ifdef __APPLE__
+
+ThreadPool globalThreadPool;
+
 KQueueLoop::KQueueLoop(int serverSocketFd) : serverSocketFd(serverSocketFd) {
     kq = kqueue();
     if (kq == -1) throw std::runtime_error("Failed to create kqueue");
@@ -12,7 +15,7 @@ KQueueLoop::KQueueLoop(int serverSocketFd) : serverSocketFd(serverSocketFd) {
 
 void KQueueLoop::addEvent(int fd, uint32_t events) {
     struct kevent event;
-    EV_SET(&event, fd, events, EV_ADD | EV_ENABLE, 0, 0, nullptr);
+    EV_SET(&event, fd, events, EV_ADD | EV_ENABLE | EV_CLEAR, 0, 0, nullptr);
     if (kevent(kq, &event, 1, nullptr, 0, nullptr) == -1) {
         perror("kevent addEvent");
         throw std::runtime_error("Failed to add event");
@@ -29,6 +32,7 @@ void KQueueLoop::removeEvent(int fd) {
 
 void KQueueLoop::run() {
     struct kevent events[MAX_EVENTS];
+    extern DeadFdQueue globalDeadFdQueue;
 
     while (true) {
         std::cout << "[KQueueLoop] Waiting for events..." << std::endl;
@@ -57,12 +61,24 @@ void KQueueLoop::run() {
             } 
             
             else {
-                if (!ClientHandler::handle(events[i].ident)) {
-                    removeEvent(events[i].ident);
-                    close(events[i].ident);
-                    std::cout << "[KQueueLoop] Client disconnected: FD " << events[i].ident << std::endl;
-                }
+                int clientSocketFd = events[i].ident;
+                
+                globalThreadPool.enqueue([this, clientSocketFd]() {
+                    std::cout << "[KQueueLoop] Handling client: FD " << clientSocketFd << std::endl;
+                    if (!ClientHandler::handle(clientSocketFd)) {
+                        removeEvent(clientSocketFd);
+                        globalDeadFdQueue.enqueue(clientSocketFd);
+                        std::cout << "[KQueueLoop] Client disconnected: FD " << clientSocketFd << std::endl;
+                    }
+                });
             }
+        }
+
+        while (auto maybeFd = globalDeadFdQueue.try_dequeue()) {
+            int fd = *maybeFd;
+            std::cout << "[KQueueLoop] Cleaning up FD: " << fd << std::endl;
+            removeEvent(fd);
+            close(fd);
         }
     }
 }

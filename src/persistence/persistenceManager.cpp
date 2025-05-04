@@ -24,17 +24,21 @@ std::unordered_map<std::string, std::string> PersistenceManager::load() {
 }
 
 void PersistenceManager::save(const std::unordered_map<std::string, std::string>& data) {
+    ThreadPool globalThreadPool;
     extern std::string dumpFileName;
-    std::ofstream file(dumpFileName, std::ios::trunc);
-    if (!file.is_open()) {
-        std::cerr << "[Persistence] Failed to open file: " << dumpFileName << std::endl;
-        return;
-    }
 
-    for (const auto& [key, value] : data) {
-        file << key << " " << value << std::endl;
-    }
-
-    std::cout << "[Persistence] Data saved to " << dumpFileName << std::endl;
-    file.close();
+    globalThreadPool.enqueue([data]() {
+        std::ofstream file(dumpFileName, std::ios::trunc);
+        if (!file.is_open()) {
+            std::cerr << "[Persistence] Failed to open file: " << dumpFileName << std::endl;
+            return;
+        }
+    
+        for (const auto& [key, value] : data) {
+            file << key << " " << value << std::endl;
+        }
+    
+        std::cout << "[Persistence] Data saved to " << dumpFileName << std::endl;
+        file.close(); 
+    });
 }

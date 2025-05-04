@@ -15,7 +15,7 @@
 class KQueueLoop : public EventLoop {
 private:
     int kq;
-    int serverSocketFd;
+    uintptr_t serverSocketFd;
 public:
     KQueueLoop(int serverSocketFd);
     ~KQueueLoop();
