@@ -2,9 +2,7 @@
 
 #include "../command.hpp"
 
-using namespace std;
-
 class PingCommand : public Command {
 public:
-    string execute(const vector<string>& args) override;
+    std::string execute(const std::vector<std::string>& args) override;
 };

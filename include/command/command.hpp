@@ -2,10 +2,8 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class Command {
 public:
-    virtual string execute(const vector<string>& args) = 0;
+    virtual std::string execute(const std::vector<std::string>& args) = 0;
     virtual ~Command() = default;
 };

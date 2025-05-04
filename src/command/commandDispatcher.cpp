@@ -2,13 +2,12 @@
 
 CommandDispatcher::CommandDispatcher() {}
 
-string CommandDispatcher::dispatch(const vector<string>& tokens) {
+std::string CommandDispatcher::dispatch(const std::vector<std::string>& tokens) {
     if (tokens.empty()) return "-ERR empty command\r\n";
 
-    // TODO: Add RESP protocol support
-    string cmd = tokens[0];
-    transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
-    vector<string> args(tokens.begin() + 1, tokens.end());
+    std::string cmd = tokens[0];
+    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
+    std::vector<std::string> args(tokens.begin() + 1, tokens.end());
 
     if (cmd == "PING") return PingCommand().execute(args);
     if (cmd == "ECHO") return EchoCommand().execute(args);

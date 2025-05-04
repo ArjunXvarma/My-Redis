@@ -12,13 +12,11 @@
 #include "commands/echoCmd.hpp"
 #include "../protocol/RESPencoder.hpp"
 
-using namespace std;
-
 class CommandDispatcher {
 public:
     CommandDispatcher();
-    string dispatch(const vector<string>& args);
+    std::string dispatch(const std::vector<std::string>& args);
 
 private:
-    unordered_map<string, unique_ptr<Command>> commandMap;
+    std::unordered_map<std::string, std::unique_ptr<Command>> commandMap;
 };

@@ -1,6 +1,6 @@
 #include "command/commands/setCmd.hpp"
 
-string SetCommand::execute(const vector<string>& args) {
+std::string SetCommand::execute(const std::vector<std::string>& args) {
     if (args.size() < 2) return "-ERR wrong number of arguments for 'set'\r\n";
 
     DataStore::getInstance().set(args[0], args[1]);
