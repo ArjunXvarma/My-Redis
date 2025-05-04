@@ -7,18 +7,16 @@
 
 #include "../persistence/persistenceManager.hpp"
 
-using namespace std;
-
 class DataStore {
 public:
     static DataStore& getInstance();
-    void set(const string& key, const string& value);
-    void del(const string& key);
-    optional<string> get(const string& key) const;
+    void set(const std::string& key, const std::string& value);
+    void del(const std::string& key);
+    optional<string> get(const std::string& key) const;
     void save();
 
 private:
-    unordered_map<string, string> store;
+    std::unordered_map<std::string, std::string> store;
 
     DataStore();
     DataStore(const DataStore&) = delete;

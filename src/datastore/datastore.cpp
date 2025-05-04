@@ -10,17 +10,17 @@ DataStore& DataStore::getInstance() {
     return instance;
 }
 
-void DataStore::set(const string& key, const string& value) {
+void DataStore::set(const std::string& key, const std::string& value) {
     store[key] = value;
     save();
 }
 
-void DataStore::del(const string& key) {
+void DataStore::del(const std::string& key) {
     store.erase(key);
     save();
 }
 
-optional<string> DataStore::get(const string& key) const {
+optional<string> DataStore::get(const std::string& key) const {
     auto it = store.find(key);
     if (it != store.end()) return it->second;
     return nullopt;
