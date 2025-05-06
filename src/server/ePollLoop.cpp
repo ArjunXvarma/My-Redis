@@ -31,9 +31,10 @@ void EPollLoop::removeEvent(int fd) {
 
 void EPollLoop::run() {
     struct epoll_event events[MAX_EVENTS];
+    extern DeadFdQueue globalDeadFdQueue;
 
     while (true) {
-        int nfds = epoll_wait(epollFd, events, MAX_EVENTS, -1);
+        size_t nfds = epoll_wait(epollFd, events, MAX_EVENTS, -1);
 
         if (nfds == -1) {
             perror("epoll_wait");
@@ -61,17 +62,27 @@ void EPollLoop::run() {
 
             else {
                 // Handle client message
-                if (!ClientHandler::handle(fd)) {
-                    removeEvent(fd);
-                    close(fd);
-                }
+                globalThreadPool.enqueue([this, fd]() {
+                    if (!ClientHandler::handle(fd)) {
+                        removeEvent(fd);
+                        globalDeadFdQueue.enqueue(fd);
+                        std::cout << "[EPollLoop] Client disconnected: FD " << fd << std::endl;
+                    }
+                });
             }
+        }
+
+        while (auto maybeFd = globalDeadFdQueue.try_dequeue()) {
+            int fd = *maybeFd;
+            std::cout << "[EPollLoop] Cleaning up FD: " << fd << std::endl;
+            removeEvent(fd);
+            close(fd);
         }
     }
 }
 
 EPollLoop::~EPollLoop() {
-    
+    close(epollFd);
 }
 
 #endif
