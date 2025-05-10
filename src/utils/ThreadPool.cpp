@@ -1,19 +1,30 @@
-#include <utils/ThreadPool.hpp>
+#include "utils/ThreadPool.hpp"
 
-ThreadPool::ThreadPool(size_t numThreads) : stop(false) {
-    for (size_t i = 0; i < numThreads; ++i) {
-        workers.emplace_back([this] {
+ThreadPool::ThreadPool(size_t num_threads) : stop(false) {
+    for (size_t i = 0; i < num_threads; ++i) {
+        workers.emplace_back([this](std::stop_token stopToken) {
             while (true) {
                 std::function<void()> task;
+
                 {
-                    std::unique_lock<std::mutex> lock(this->queueMutex);
-                    this->condition.wait(lock, [this] { return this->stop || !this->tasks.empty(); });
+                    std::unique_lock<std::mutex> lock(queueMutex);
+
+                    condition.wait(lock, [this, &stopToken]() {
+                        return stop || !tasks.empty() || stopToken.stop_requested();
+                    });
+
+                    if (stop && tasks.empty()) 
+                        return; // Exit the thread if stop is true and no tasks remain
                     
-                    if (this->stop && this->tasks.empty()) return;
+
+                    if (stopToken.stop_requested()) 
+                        return; // Exit the thread if a stop request is received
                     
-                    task = std::move(this->tasks.front());
-                    this->tasks.pop();
+
+                    task = std::move(tasks.front());
+                    tasks.pop();
                 }
+
                 task();
             }
         });
@@ -26,9 +37,6 @@ ThreadPool::~ThreadPool() {
         stop = true;
     }
     condition.notify_all();
-    for (std::thread &worker : workers) {
-        worker.join();
-    }
 }
 
 void ThreadPool::enqueue(std::function<void()> task) {

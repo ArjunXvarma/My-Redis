@@ -1,6 +1,9 @@
 #include "persistence/persistenceManager.hpp"
 #include <fstream>
 #include <iostream>
+#include <future>
+#include <sstream>
+#include <mutex>
 
 std::unordered_map<std::string, std::string> PersistenceManager::load() {
     extern std::string dumpFileName;
@@ -24,7 +27,7 @@ std::unordered_map<std::string, std::string> PersistenceManager::load() {
 }
 
 void PersistenceManager::save(const std::unordered_map<std::string, std::string>& data) {
-    ThreadPool globalThreadPool;
+    extern ThreadPool globalThreadPool;
     extern std::string dumpFileName;
 
     globalThreadPool.enqueue([data]() {
@@ -33,12 +36,31 @@ void PersistenceManager::save(const std::unordered_map<std::string, std::string>
             std::cerr << "[Persistence] Failed to open file: " << dumpFileName << std::endl;
             return;
         }
-    
-        for (const auto& [key, value] : data) {
-            file << key << " " << value << std::endl;
+
+        std::mutex fileMutex;
+        std::vector<std::future<void>> futures;
+        size_t batchSize = 50;
+        auto it = data.begin();
+
+        while (it != data.end()) {
+            std::unordered_map<std::string, std::string> batch;
+            for (size_t i = 0; i < batchSize && it != data.end(); ++i, ++it) {
+                batch[it->first] = it->second;
+            }
+
+            futures.emplace_back(std::async(std::launch::async, [&file, &fileMutex, batch]() {
+                std::ostringstream oss;
+                for (const auto& [key, value] : batch) {
+                    oss << key << " " << value << "\n";
+                }
+                std::lock_guard<std::mutex> lock(fileMutex);
+                file << oss.str();
+            }));
         }
-    
+
+        for (auto& f : futures) f.get();
+
         std::cout << "[Persistence] Data saved to " << dumpFileName << std::endl;
-        file.close(); 
+        file.close();
     });
 }
