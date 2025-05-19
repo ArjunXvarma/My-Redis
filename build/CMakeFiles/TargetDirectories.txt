@@ -1,3 +1,0 @@
-/Users/arjunvarma/Desktop/Programs/C++/Redis/My-Redis/build/CMakeFiles/redis_clone.dir
-/Users/arjunvarma/Desktop/Programs/C++/Redis/My-Redis/build/CMakeFiles/edit_cache.dir
-/Users/arjunvarma/Desktop/Programs/C++/Redis/My-Redis/build/CMakeFiles/rebuild_cache.dir

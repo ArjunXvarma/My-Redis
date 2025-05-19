@@ -8,7 +8,7 @@
 
 bool ClientHandler::handle(int clientSocket) {
     char buffer[1024] = {0};
-    ssize_t bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0); // -1 for null terminator
+    ssize_t bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0); 
 
     if (bytesReceived == 0) {
         std::cout << "Client disconnected." << std::endl;
@@ -37,12 +37,10 @@ bool ClientHandler::handle(int clientSocket) {
     }
 
     CommandDispatcher dispatcher;
-    // Bind the dispatcher instance to the dispatch method
     auto boundDispatch = [&dispatcher](const std::vector<std::string>& args) {
         return dispatcher.dispatch(args);
     };
 
-    // Dispatch the command asynchronously
     std::future<std::string> futureResponse = globalThreadPool.enqueue(boundDispatch, tokens);
     std::string response = futureResponse.get();
 
