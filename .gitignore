@@ -7,6 +7,7 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+build/
 
 # Object files and libraries
 *.o
@@ -22,6 +23,7 @@ Makefile
 *.swp
 *.swo
 *.DS_Store
+*.rdb
 
 # IDE-specific files
 .vscode/

@@ -1,20 +1,22 @@
 #include "utils/ThreadPool.hpp"
 
 ThreadPool::ThreadPool(size_t num_threads)
-    : num_threads(num_threads), stop(false) {
+    : num_threads(num_threads) {
     for (size_t i = 0; i < num_threads; i++) {
-        threads.emplace_back([this] {
-            std::function<void()> task;
+        threads.emplace_back([this](std::stop_token stoken) {
+            while (!stoken.stop_requested()) {
+                std::function<void()> task;
 
-            while (true) {
                 {
-                    std::unique_lock<std::mutex> l(m);
-                    cv.wait(l, [this] {
-                        return !task_queue.empty() || stop;
+                    std::unique_lock<std::mutex> lock(m);
+                    cv.wait(lock, [this, &stoken]() {
+                        return !task_queue.empty() || stoken.stop_requested();
                     });
 
-                    if (stop) return;
+                    if (stoken.stop_requested() && task_queue.empty())
+                        return;
 
+                    if (task_queue.empty()) continue;  // spurious wakeup
                     task = std::move(task_queue.pop());
                 }
 
@@ -25,9 +27,7 @@ ThreadPool::ThreadPool(size_t num_threads)
 }
 
 ThreadPool::~ThreadPool() {
-    {
-        std::unique_lock<std::mutex> l(m);
-        stop = true;
-    }
+    // Threads will auto-stop due to std::jthread destructor,
+    // just wake all of them in case they are waiting.
     cv.notify_all();
 }
