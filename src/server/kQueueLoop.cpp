@@ -63,14 +63,14 @@ void KQueueLoop::run() {
             else {
                 int clientSocketFd = events[i].ident;
                 
-                globalThreadPool.enqueue([this, clientSocketFd]() {
+                globalThreadPool.enqueue(std::function<void()> ([this, clientSocketFd]() {
                     std::cout << "[KQueueLoop] Handling client: FD " << clientSocketFd << std::endl;
                     if (!ClientHandler::handle(clientSocketFd)) {
                         removeEvent(clientSocketFd);
                         globalDeadFdQueue.enqueue(clientSocketFd);
                         std::cout << "[KQueueLoop] Client disconnected: FD " << clientSocketFd << std::endl;
                     }
-                });
+                }));
             }
         }
 

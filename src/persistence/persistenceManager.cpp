@@ -30,7 +30,7 @@ void PersistenceManager::save(const std::unordered_map<std::string, std::string>
     extern ThreadPool globalThreadPool;
     extern std::string dumpFileName;
 
-    globalThreadPool.enqueue([data]() {
+    globalThreadPool.enqueue(std::function<void()>([data]() {
         std::ofstream file(dumpFileName, std::ios::trunc);
         if (!file.is_open()) {
             std::cerr << "[Persistence] Failed to open file: " << dumpFileName << std::endl;
@@ -62,5 +62,5 @@ void PersistenceManager::save(const std::unordered_map<std::string, std::string>
 
         std::cout << "[Persistence] Data saved to " << dumpFileName << std::endl;
         file.close();
-    });
+    }));
 }

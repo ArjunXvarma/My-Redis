@@ -27,7 +27,8 @@ bool ClientHandler::handle(int clientSocket) {
     buffer[bytesReceived] = '\0';
     std::string input(buffer);
 
-    auto tokens = RESPParser::parse(input);
+    std::future<std::vector<std::string>> futureTokens = globalThreadPool.enqueue(RESPParser::parse, input);
+    std::vector<std::string> tokens = futureTokens.get();
 
     if (tokens.empty()) {
         std::string error = RESPEncoder::encodeError("Invalid or incomplete command");
@@ -36,8 +37,17 @@ bool ClientHandler::handle(int clientSocket) {
     }
 
     CommandDispatcher dispatcher;
-    std::string response = dispatcher.dispatch(tokens);
-    std::string encoded = RESPEncoder::encodeBulkString(response);
+    // Bind the dispatcher instance to the dispatch method
+    auto boundDispatch = [&dispatcher](const std::vector<std::string>& args) {
+        return dispatcher.dispatch(args);
+    };
+
+    // Dispatch the command asynchronously
+    std::future<std::string> futureResponse = globalThreadPool.enqueue(boundDispatch, tokens);
+    std::string response = futureResponse.get();
+
+    std::future<std::string> futureEncoded = globalThreadPool.enqueue(RESPEncoder::encodeBulkString, response);
+    std::string encoded = futureEncoded.get();
 
     size_t totalSent = 0;
     while (totalSent < encoded.size()) {
