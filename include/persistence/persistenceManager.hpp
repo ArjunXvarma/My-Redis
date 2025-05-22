@@ -3,9 +3,10 @@
 #include <string>
 
 #include "../utils/GlobalThreadPool.hpp"
+#include "../datastore/Value.hpp"
 
 class PersistenceManager {
 public:
-    static void save(const std::unordered_map<std::string, std::string>& store);
-    static std::unordered_map<std::string, std::string> load();
+    static std::unordered_map<std::string, Value> load();
+    static void save(const std::unordered_map<std::string, Value>& data);
 };
