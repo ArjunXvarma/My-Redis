@@ -1,5 +1,7 @@
-#include <cstring>
 #include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -13,12 +15,25 @@ void sendCommand(int clientSocket, const string& command) {
     char buffer[1024] = {0};
     int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
 
-    cout << bytesReceived << " bytes received" << endl;
-    if (bytesReceived > 0) cout << "Response: " << buffer << endl;
-    else cout << "No response from server" << endl;
+    if (bytesReceived > 0) {
+        cout << "Response: " << buffer << endl;
+    } else {
+        cerr << "No response from server" << endl;
+    }
+}
+
+string generateRandomString(size_t length) {
+    const string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    string randomString;
+    for (size_t i = 0; i < length; ++i) {
+        randomString += characters[rand() % characters.size()];
+    }
+    return randomString;
 }
 
 int main() {
+    srand(time(0)); // Seed the random number generator
+
     // Create the client socket
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket < 0) {
@@ -43,33 +58,18 @@ int main() {
         return 1;
     }
 
-    // Test PING command
-    cout << "Testing PING command..." << endl;
-    sendCommand(clientSocket, "*1\r\n$4\r\nPING\r\n");
+    // Populate the Redis database with random key-value pairs
+    int numEntries = 100; // Number of key-value pairs to insert
+    for (int i = 0; i < numEntries; ++i) {
+        string key = "key" + to_string(i) + "_" + generateRandomString(5);
+        string value = generateRandomString(10);
 
-    // Test ECHO command
-    cout << "Testing ECHO command..." << endl;
-    sendCommand(clientSocket, "*2\r\n$4\r\nECHO\r\n$13\r\nHello, Redis!\r\n");
+        string command = "*3\r\n$3\r\nSET\r\n$" + to_string(key.size()) + "\r\n" + key + "\r\n$" +
+                         to_string(value.size()) + "\r\n" + value + "\r\n";
 
-    // Test SET command
-    cout << "Testing SET command..." << endl;
-    sendCommand(clientSocket, "*3\r\n$3\r\nSET\r\n$4\r\nkey1\r\n$6\r\nvalue1\r\n");
-
-    // Test GET command
-    cout << "Testing GET command..." << endl;
-    sendCommand(clientSocket, "*2\r\n$3\r\nGET\r\n$4\r\nkey1\r\n");
-
-    // Test DEL command
-    cout << "Testing DEL command..." << endl;
-    sendCommand(clientSocket, "*2\r\n$3\r\nDEL\r\n$4\r\nkey1\r\n");
-    
-    // Test KEYS command
-    cout << "Testing KEYS command..." << endl;
-    sendCommand(clientSocket, "*1\r\n$4\r\nKEYS\r\n");
-    
-    // Test unknown command
-    cout << "Testing unknown command..." << endl;
-    sendCommand(clientSocket, "*1\r\n$7\r\nUNKNOWN\r\n");
+        cout << "Sending command: " << command;
+        sendCommand(clientSocket, command);
+    }
 
     // Close the client socket
     close(clientSocket);

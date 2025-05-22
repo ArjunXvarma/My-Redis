@@ -43,33 +43,23 @@ int main() {
         return 1;
     }
 
-    // Test PING command
-    cout << "Testing PING command..." << endl;
-    sendCommand(clientSocket, "*1\r\n$4\r\nPING\r\n");
-
-    // Test ECHO command
-    cout << "Testing ECHO command..." << endl;
-    sendCommand(clientSocket, "*2\r\n$4\r\nECHO\r\n$13\r\nHello, Redis!\r\n");
-
-    // Test SET command
-    cout << "Testing SET command..." << endl;
+    // Populate the database with key-value pairs
+    cout << "Populating database with key-value pairs..." << endl;
     sendCommand(clientSocket, "*3\r\n$3\r\nSET\r\n$4\r\nkey1\r\n$6\r\nvalue1\r\n");
+    sendCommand(clientSocket, "*3\r\n$3\r\nSET\r\n$4\r\nkey2\r\n$6\r\nvalue2\r\n");
+    sendCommand(clientSocket, "*3\r\n$3\r\nSET\r\n$4\r\nkey3\r\n$6\r\nvalue3\r\n");
 
-    // Test GET command
-    cout << "Testing GET command..." << endl;
-    sendCommand(clientSocket, "*2\r\n$3\r\nGET\r\n$4\r\nkey1\r\n");
-
-    // Test DEL command
-    cout << "Testing DEL command..." << endl;
-    sendCommand(clientSocket, "*2\r\n$3\r\nDEL\r\n$4\r\nkey1\r\n");
-    
-    // Test KEYS command
-    cout << "Testing KEYS command..." << endl;
+    // Verify keys are present
+    cout << "Verifying keys before FLUSHALL..." << endl;
     sendCommand(clientSocket, "*1\r\n$4\r\nKEYS\r\n");
-    
-    // Test unknown command
-    cout << "Testing unknown command..." << endl;
-    sendCommand(clientSocket, "*1\r\n$7\r\nUNKNOWN\r\n");
+
+    // Use FLUSHALL command
+    cout << "Testing FLUSHALL command..." << endl;
+    sendCommand(clientSocket, "*1\r\n$8\r\nFLUSHALL\r\n");
+
+    // Verify keys are deleted
+    cout << "Verifying keys after FLUSHALL..." << endl;
+    sendCommand(clientSocket, "*1\r\n$4\r\nKEYS\r\n");
 
     // Close the client socket
     close(clientSocket);
