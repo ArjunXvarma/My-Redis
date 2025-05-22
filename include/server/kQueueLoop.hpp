@@ -16,6 +16,8 @@ class KQueueLoop : public EventLoop {
 private:
     int kq;
     uintptr_t serverSocketFd;
+    std::unordered_set<int> registered_fds;
+    
 public:
     KQueueLoop(int serverSocketFd);
     ~KQueueLoop();

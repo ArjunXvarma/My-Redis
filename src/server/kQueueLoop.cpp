@@ -8,7 +8,6 @@ KQueueLoop::KQueueLoop(int serverSocketFd) : serverSocketFd(serverSocketFd) {
     kq = kqueue();
     if (kq == -1) throw std::runtime_error("Failed to create kqueue");
 
-    // Add the server socket to the kqueue
     setNonBlocking(serverSocketFd);
     addEvent(serverSocketFd, EVFILT_READ);
 }
@@ -23,11 +22,18 @@ void KQueueLoop::addEvent(int fd, uint32_t events) {
 }
 
 void KQueueLoop::removeEvent(int fd) {
+    if (registered_fds.find(fd) == registered_fds.end()) {
+        // FD is not registered, skip removal
+        return;
+    }
+
     struct kevent event;
     EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, nullptr);
     if (kevent(kq, &event, 1, nullptr, 0, nullptr) == -1) {
         throw std::runtime_error("Failed to remove event");
     }
+
+    registered_fds.erase(fd);
 }
 
 void KQueueLoop::run() {
@@ -63,14 +69,14 @@ void KQueueLoop::run() {
             else {
                 int clientSocketFd = events[i].ident;
                 
-                globalThreadPool.enqueue(std::function<void()> ([this, clientSocketFd]() {
+                globalThreadPool.enqueue([this, clientSocketFd]() {
                     std::cout << "[KQueueLoop] Handling client: FD " << clientSocketFd << std::endl;
                     if (!ClientHandler::handle(clientSocketFd)) {
                         removeEvent(clientSocketFd);
                         globalDeadFdQueue.enqueue(clientSocketFd);
                         std::cout << "[KQueueLoop] Client disconnected: FD " << clientSocketFd << std::endl;
                     }
-                }));
+                });
             }
         }
 

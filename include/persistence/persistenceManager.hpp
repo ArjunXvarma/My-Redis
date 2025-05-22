@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
+#include <optional>
 
 #include "../utils/GlobalThreadPool.hpp"
 #include "../datastore/Value.hpp"
