@@ -12,3 +12,21 @@
 #include "commands/sinterCmd.hpp"
 #include "commands/zrangeCmd.hpp"
 #include "commands/scanCmd.hpp"
+
+#include "commands/hash_set_commands/hdelCmd.hpp"
+#include "commands/hash_set_commands/hexistsCmd.hpp"
+#include "commands/hash_set_commands/hgetallCmd.hpp"
+#include "commands/hash_set_commands/hgetCmd.hpp"
+#include "commands/hash_set_commands/hsetCmd.hpp"
+
+#include "commands/list_commands/llenCmd.hpp"
+#include "commands/list_commands/lpopCmd.hpp"
+#include "commands/list_commands/lpushCmd.hpp"
+#include "commands/list_commands/lrangeCmd.hpp"
+#include "commands/list_commands/rpopCmd.hpp"
+#include "commands/list_commands/rpushCmd.hpp"
+
+#include "commands/set_commands/saddCmd.hpp"
+#include "commands/set_commands/sismemberCmd.hpp"
+#include "commands/set_commands/smembersCmd.hpp"
+#include "commands/set_commands/sremCmd.hpp"
