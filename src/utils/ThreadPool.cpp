@@ -27,7 +27,5 @@ ThreadPool::ThreadPool(size_t num_threads)
 }
 
 ThreadPool::~ThreadPool() {
-    // Threads will auto-stop due to std::jthread destructor,
-    // just wake all of them in case they are waiting.
     cv.notify_all();
 }
