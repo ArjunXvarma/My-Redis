@@ -1,6 +1,5 @@
 #pragma once
 
-#include "datastore/datastore.hpp"
 #include "../command.hpp"
 
 class GetCommand : public Command {
