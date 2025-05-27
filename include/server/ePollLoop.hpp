@@ -12,11 +12,14 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <unordered_set>
 
 class EPollLoop : public EventLoop {
 private:
     int epollFd;
     int serverSocketFd;
+    std::unordered_set<int> activeSockets;
+    
 public:
     EPollLoop(int serverSocketFd);
     

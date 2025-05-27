@@ -2,7 +2,7 @@
 
 ThreadPool::ThreadPool(size_t num_threads)
     : num_threads(num_threads) {
-    for (size_t i = 0; i < num_threads; i++) {
+    for (size_t i = 0; i < this->num_threads; i++) {
         threads.emplace_back([this](std::stop_token stoken) {
             while (!stoken.stop_requested()) {
                 std::function<void()> task;

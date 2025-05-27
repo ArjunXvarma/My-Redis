@@ -17,16 +17,25 @@ void EPollLoop::addEvent(int fd, uint32_t events) {
     event.data.fd = fd;
 
     if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event) == -1) {
-        perror("Adding socket to epoll has failed");
-        exit(-1);
+        perror("epoll_ctl: add");
+        return;
     }
+
+    activeSockets.insert(fd);
 }
 
 void EPollLoop::removeEvent(int fd) {
-    if (epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, NULL) == -1) {
-        perror("Removing socket to epoll has failed");
-        exit(-1);
+    if (activeSockets.find(fd) == activeSockets.end()) {
+        std::cerr << "[EPollLoop] Attempted to remove a non-existent socket: FD " << fd << std::endl;
+        return;
     }
+
+    if (epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, nullptr) == -1) {
+        perror("epoll_ctl: remove");
+        return;
+    }
+
+    activeSockets.erase(fd);
 }
 
 void EPollLoop::run() {
@@ -36,7 +45,7 @@ void EPollLoop::run() {
     while (true) {
         size_t nfds = epoll_wait(epollFd, events, MAX_EVENTS, -1);
 
-        if (nfds == -1) {
+        if ((int)nfds == -1) {
             perror("epoll_wait");
             continue;
         }
@@ -61,14 +70,14 @@ void EPollLoop::run() {
             }
 
             else {
-                // Handle client message
-                globalThreadPool.enqueue([this, fd]() {
+                globalThreadPool.enqueue(std::function<void()> ([this, fd]() {
+                    std::cout << "[EPollLoop] Handling client: FD " << fd << std::endl;
                     if (!ClientHandler::handle(fd)) {
                         removeEvent(fd);
                         globalDeadFdQueue.enqueue(fd);
                         std::cout << "[EPollLoop] Client disconnected: FD " << fd << std::endl;
                     }
-                });
+                }));
             }
         }
 

@@ -34,7 +34,7 @@ public:
     }
 
 private:
-    std::queue<T> q; // Underlying queue
-    std::mutex m; // Mutex for thread safety
-    std::condition_variable cv; // Condition variable for synchronization
+    std::queue<T> q;
+    std::mutex m;
+    std::condition_variable cv;
 };

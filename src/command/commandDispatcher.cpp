@@ -1,6 +1,10 @@
 #include "command/commandDispatcher.hpp"
 #include "utils/GlobalThreadPool.hpp"
 
+#ifdef __linux__
+ThreadPool globalThreadPool;
+#endif
+
 CommandDispatcher::CommandDispatcher() {}
 
 std::string CommandDispatcher::dispatch(const std::vector<std::string>& tokens) {
