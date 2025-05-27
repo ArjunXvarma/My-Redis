@@ -71,7 +71,7 @@ int main() {
 
     // Verify the list with LRANGE
     cout << "Verifying list with LRANGE after pops..." << endl;
-    sendCommand(clientSocket, "*4\r\n$6\r\nLRANGE\r\n$6\r\nmylist\r\n$1\r\n0\r\n$1\r\n-1\r\n");
+    sendCommand(clientSocket, "*4\r\n$6\r\nLRANGE\r\n$6\r\nmylist\r\n$1\r\n0\r\n$2\r\n-1\r\n");
 
     // Close the client socket
     close(clientSocket);

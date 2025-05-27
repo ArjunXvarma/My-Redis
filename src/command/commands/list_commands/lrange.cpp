@@ -13,7 +13,7 @@ std::string LRangeCommand::execute(const std::vector<std::string>& args) {
 
     try {
         std::vector<std::string> range = ds.lrange(key, start, end);
-        
+
         if (range.empty()) 
             return "*0\r\n";
 
