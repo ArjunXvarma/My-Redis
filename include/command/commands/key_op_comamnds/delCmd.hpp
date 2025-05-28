@@ -1,7 +1,7 @@
 #pragma once
-#include "../command.hpp"
+#include "../../command.hpp"
 
-class ScanCommand : public Command {
+class DelCommand : public Command {
 public:
     std::string execute(const std::vector<std::string>& args) override;
 };

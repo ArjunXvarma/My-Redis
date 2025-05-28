@@ -1,7 +1,8 @@
 #pragma once
-#include "../command.hpp"
 
-class FlushAllCommand : public Command {
+#include "../../command.hpp"
+
+class GetCommand : public Command {
 public:
     std::string execute(const std::vector<std::string>& args) override;
 };

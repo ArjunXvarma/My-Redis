@@ -1,4 +1,4 @@
-#include "command/commands/delCmd.hpp"
+#include "command/commands/key_op_comamnds/delCmd.hpp"
 
 std::string DelCommand::execute(const std::vector<std::string>& args) {
     if (args.empty()) return "-ERR wrong number of arguments for 'del'\r\n";

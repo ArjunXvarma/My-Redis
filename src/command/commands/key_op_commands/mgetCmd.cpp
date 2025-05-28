@@ -1,4 +1,4 @@
-#include "command/commands/mgetCmd.hpp"
+#include "command/commands/key_op_comamnds/mgetCmd.hpp"
 
 std::string MGetCommand::execute(const std::vector<std::string>& args) {
     if (args.empty()) return "-ERR wrong number of arguments for 'MGET'\r\n";

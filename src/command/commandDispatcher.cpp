@@ -25,11 +25,9 @@ std::string CommandDispatcher::dispatch(const std::vector<std::string>& tokens) 
         if (cmd == "KEYS") return KeysCommand().execute(args);
         if (cmd == "MGET") return MGetCommand().execute(args);
         if (cmd == "MSET") return MSetCommand().execute(args);
-        if (cmd == "SCAN") return ScanCommand().execute(args);
         if (cmd == "SINTER") return SInterCommand().execute(args);
         if (cmd == "SORT") return SortCommand().execute(args);
         if (cmd == "SUNION") return SUnionCommand().execute(args);
-        if (cmd == "ZRANGE") return ZRangeCommand().execute(args);
 
         // Set commands
         if (cmd == "SADD") return SAddCommand().execute(args);

@@ -1,4 +1,4 @@
-#include "command/commands/getCmd.hpp"
+#include "command/commands/key_op_comamnds/getCmd.hpp"
 
 std::string GetCommand::execute(const std::vector<std::string>& args) {
     if (args.empty()) return "-ERR wrong number of arguments for 'get'\r\n";

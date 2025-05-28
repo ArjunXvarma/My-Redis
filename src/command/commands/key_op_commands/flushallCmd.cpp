@@ -1,4 +1,4 @@
-#include "command/commands/flushallCmd.hpp"
+#include "command/commands/key_op_comamnds/flushallCmd.hpp"
 
 std::string FlushAllCommand::execute(const std::vector<std::string>& args) {
     if (args.size() > 1) return "-ERR wrong number of arguments for 'flushall'\r\n";

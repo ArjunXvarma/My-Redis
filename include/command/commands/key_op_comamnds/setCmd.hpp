@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../command.hpp"
+#include "../../command.hpp"
 #include "datastore/datastore.hpp"
 #include <unordered_map>
 

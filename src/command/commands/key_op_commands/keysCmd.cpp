@@ -1,4 +1,4 @@
-#include "command/commands/keysCmd.hpp"
+#include "command/commands/key_op_comamnds/keysCmd.hpp"
 
 std::string KeysCommand::execute(const std::vector<std::string>& args) {
     if (!args.empty()) return "-ERR wrong number of arguments for 'keys'\r\n";

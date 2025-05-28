@@ -1,4 +1,4 @@
-#include "command/commands/setCmd.hpp"
+#include "command/commands/key_op_comamnds/setCmd.hpp"
 
 std::string SetCommand::execute(const std::vector<std::string>& args) {
     if (args.size() < 2) return "-ERR wrong number of arguments for 'set'\r\n";
