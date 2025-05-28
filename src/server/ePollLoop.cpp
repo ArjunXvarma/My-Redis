@@ -35,6 +35,7 @@ void EPollLoop::removeEvent(int fd) {
         return;
     }
 
+    clientHandlers.erase(fd);
     activeSockets.erase(fd);
 }
 
@@ -65,19 +66,25 @@ void EPollLoop::run() {
 
                 setNonBlocking(client_fd);
                 addEvent(client_fd, EPOLLIN);
+                clientHandlers.emplace(client_fd, ClientHandler(client_fd));
 
                 std::cout << "New client connected: FD " << client_fd << std::endl;
             }
 
             else {
-                globalThreadPool.enqueue(std::function<void()> ([this, fd]() {
+                globalThreadPool.enqueue([this, fd]() {
                     std::cout << "[EPollLoop] Handling client: FD " << fd << std::endl;
-                    if (!ClientHandler::handle(fd)) {
+                    auto it = clientHandlers.find(fd);
+                    if (it == clientHandlers.end()) return;
+
+                    ClientHandler& handler = it->second;
+                    if (!handler.handle()) {
                         removeEvent(fd);
                         globalDeadFdQueue.enqueue(fd);
+                        clientHandlers.erase(fd);  // Cleanup
                         std::cout << "[EPollLoop] Client disconnected: FD " << fd << std::endl;
                     }
-                }));
+                });
             }
         }
 
@@ -86,6 +93,7 @@ void EPollLoop::run() {
             std::cout << "[EPollLoop] Cleaning up FD: " << fd << std::endl;
             removeEvent(fd);
             close(fd);
+            clientHandlers.erase(fd);  // <- make sure you remove the ClientHandler
         }
     }
 }

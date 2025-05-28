@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <unordered_set>
+#include <unordered_map>
 
 #include "clientHandler.hpp"
 #include "utils/GlobalThreadPool.hpp"
@@ -20,6 +21,8 @@ class EventLoop {
 private:
     uintptr_t serverSocketFd;
     std::unordered_set<int> registered_fds;
+    std::unordered_map<int, ClientHandler> clientHandlers;
+
 public:
     virtual void addEvent(int fd, uint32_t events) = 0;
     virtual void removeEvent(int fd) = 0;

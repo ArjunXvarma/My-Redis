@@ -19,6 +19,7 @@ private:
     int epollFd;
     int serverSocketFd;
     std::unordered_set<int> activeSockets;
+    std::unordered_map<int, ClientHandler> clientHandlers;
     
 public:
     EPollLoop(int serverSocketFd);

@@ -6,7 +6,8 @@
 #include <cstring>
 #include "server/clientHandler.hpp"
 
-bool ClientHandler::handle(int clientSocket) {
+bool ClientHandler::handle() {
+    int clientSocket = socket_fd;
     char buffer[1024] = {0};
     ssize_t bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0); 
 
