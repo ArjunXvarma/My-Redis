@@ -10,7 +10,7 @@ using namespace std;
 void sendCommand(int clientSocket, const string& command) {
     send(clientSocket, command.c_str(), command.length(), 0);
 
-    char buffer[1024] = {0};
+    char buffer[2048] = {0};
     int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
 
     cout << bytesReceived << " bytes received" << endl;
@@ -66,6 +66,38 @@ int main() {
     // Verify SREM by checking SMEMBERS again
     cout << "Verifying SREM with SMEMBERS..." << endl;
     sendCommand(clientSocket, "*2\r\n$8\r\nSMEMBERS\r\n$4\r\nset1\r\n");
+
+    // --- Additional tests for SINTER, SUNION, and SORT ---
+
+    // Prepare more sets for SINTER and SUNION
+    cout << "Adding members to set2 and set3..." << endl;
+    sendCommand(clientSocket, "*4\r\n$4\r\nSADD\r\n$4\r\nset2\r\n$6\r\nvalue2\r\n$6\r\nvalue3\r\n");
+    sendCommand(clientSocket, "*4\r\n$4\r\nSADD\r\n$4\r\nset3\r\n$6\r\nvalue3\r\n$6\r\nvalue4\r\n");
+
+    // Test SINTER
+    cout << "Testing SINTER command..." << endl;
+    sendCommand(clientSocket, "*4\r\n$6\r\nSINTER\r\n$4\r\nset1\r\n$4\r\nset2\r\n$4\r\nset3\r\n");
+
+    // Test SUNION
+    cout << "Testing SUNION command..." << endl;
+    sendCommand(clientSocket, "*4\r\n$6\r\nSUNION\r\n$4\r\nset1\r\n$4\r\nset2\r\n$4\r\nset3\r\n");
+
+    // Prepare a list for SORT
+    cout << "Adding members to list for SORT..." << endl;
+    sendCommand(clientSocket, "*4\r\n$5\r\nLPUSH\r\n$5\r\nalist\r\n$1\r\n3\r\n$1\r\n1\r\n");
+    sendCommand(clientSocket, "*3\r\n$5\r\nRPUSH\r\n$5\r\nalist\r\n$1\r\n2\r\n");
+
+    // Test SORT ASC
+    cout << "Testing SORT ASC..." << endl;
+    sendCommand(clientSocket, "*3\r\n$4\r\nSORT\r\n$5\r\nalist\r\n$3\r\nASC\r\n");
+
+    // Test SORT DESC
+    cout << "Testing SORT DESC..." << endl;
+    sendCommand(clientSocket, "*3\r\n$4\r\nSORT\r\n$5\r\nalist\r\n$4\r\nDESC\r\n");
+
+    // Test SORT with offset and count
+    cout << "Testing SORT ASC with offset=1, count=1..." << endl;
+    sendCommand(clientSocket, "*5\r\n$4\r\nSORT\r\n$5\r\nalist\r\n$3\r\nASC\r\n$1\r\n1\r\n$1\r\n1\r\n");
 
     // Close the client socket
     close(clientSocket);

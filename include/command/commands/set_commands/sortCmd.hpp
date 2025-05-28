@@ -1,7 +1,7 @@
 #pragma once
-#include "../command.hpp"
+#include "../../command.hpp"
 
-class SUnionCommand : public Command {
+class SortCommand : public Command {
 public:
     std::string execute(const std::vector<std::string>& args) override;
 };

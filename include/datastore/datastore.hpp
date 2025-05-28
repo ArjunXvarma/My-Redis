@@ -6,6 +6,7 @@
 #include <iostream>
 #include <mutex>
 #include <vector>
+#include <algorithm>
 
 #include "../persistence/persistenceManager.hpp"
 #include "Value.hpp"
@@ -49,10 +50,10 @@ public:
     std::vector<std::string> allKeys();
     std::vector<std::optional<std::string>> mget(const std::vector<std::string> &keys);
     void mset(const std::unordered_map<std::string, std::string>& kvs);
-    void scan();
-    void sinter();
-    void sort();
-    void sunion();
+    std::vector<std::string> scan();
+    std::vector<std::string> sinter(std::vector<std::string> keys);
+    std::vector<std::string> sort(const std::string& key, const std::string& order = "ASC", int offset = 0, int count = -1);
+    std::vector<std::string> sunion(std::vector<std::string> keys);
     void zrange();
     
     void save();

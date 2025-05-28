@@ -1,5 +1,5 @@
 #pragma once
-#include "../command.hpp"
+#include "../../command.hpp"
 
 class SInterCommand : public Command {
 public:

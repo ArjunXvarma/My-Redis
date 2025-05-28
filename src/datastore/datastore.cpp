@@ -72,3 +72,98 @@ void DataStore::mset(const std::unordered_map<std::string, std::string>& kvs) {
     for (const auto& [key, value] : kvs) 
         store[key] = Value{ValueType::STRING, value};
 }
+
+std::vector<std::string> DataStore::sort(const std::string& key, const std::string& order, int offset, int count) {
+    std::unique_lock<std::mutex> l(m);
+
+    auto it = store.find(key);
+    if (it == store.end())
+        throw std::runtime_error("Key does not exist");
+
+    std::vector<std::string> elements;
+
+    // Support sorting for LIST and SET types
+    if (it->second.type == ValueType::LIST) {
+        const auto& list = std::get<std::deque<std::string>>(it->second.data);
+        elements.assign(list.begin(), list.end());
+    } 
+    
+    else if (it->second.type == ValueType::SET) {
+        const auto& set = std::get<std::unordered_set<std::string>>(it->second.data);
+        elements.assign(set.begin(), set.end());
+    } 
+    
+    else 
+        throw std::runtime_error("SORT only supported for LIST or SET types");
+    
+
+    // Sort elements
+    if (order == "DESC")
+        std::sort(elements.begin(), elements.end(), std::greater<>());
+    else
+        std::sort(elements.begin(), elements.end());
+
+    // Apply offset and count
+    int total = static_cast<int>(elements.size());
+    int start = std::max(0, offset);
+    int end = (count < 0) ? total : std::min(start + count, total);
+
+    if (start > total) return {};
+
+    return std::vector<std::string>(elements.begin() + start, elements.begin() + end);
+}
+
+std::vector<std::string> DataStore::sinter(std::vector<std::string> keys) {
+    std::unique_lock<std::mutex> l(m);
+
+    if (keys.empty()) return {};
+
+    // Find the first set
+    auto it = store.find(keys[0]);
+    if (it == store.end())
+        throw std::runtime_error("Key does not exist");
+    if (it->second.type != ValueType::SET)
+        throw std::runtime_error("SINTER only supported for SET types");
+
+    std::unordered_set<std::string> result = std::get<std::unordered_set<std::string>>(it->second.data);
+
+    // Intersect with the rest
+    for (size_t i = 1; i < keys.size(); ++i) {
+        auto it2 = store.find(keys[i]);
+        if (it2 == store.end())
+            throw std::runtime_error("Key does not exist");
+        if (it2->second.type != ValueType::SET)
+            throw std::runtime_error("SINTER only supported for SET types");
+
+        const auto& nextSet = std::get<std::unordered_set<std::string>>(it2->second.data);
+
+        for (auto rit = result.begin(); rit != result.end(); ) {
+            if (nextSet.find(*rit) == nextSet.end())
+                rit = result.erase(rit);
+            else
+                ++rit;
+        }
+    }
+
+    return std::vector<std::string>(result.begin(), result.end());
+}
+
+std::vector<std::string> DataStore::sunion(std::vector<std::string> keys) {
+    std::unique_lock<std::mutex> l(m);
+
+    std::unordered_set<std::string> res;
+    for (const std::string &key : keys) {
+        auto it = store.find(key);
+        if (it == store.end())
+            throw std::runtime_error("Key does not exist");
+
+        if (it->second.type != ValueType::SET)
+            throw std::runtime_error("SINTER/SUNION only supported for SET types");
+
+        const auto& set = std::get<std::unordered_set<std::string>>(it->second.data);
+
+        res.insert(set.begin(), set.end());
+    }
+
+    return std::vector<std::string>(res.begin(), res.end());
+}
