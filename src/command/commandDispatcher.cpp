@@ -7,7 +7,7 @@ ThreadPool globalThreadPool;
 
 CommandDispatcher::CommandDispatcher() {}
 
-std::string CommandDispatcher::dispatch(const std::vector<std::string>& tokens) {
+std::string CommandDispatcher::dispatch(const std::vector<std::string>& tokens, TransactionContext& txn) {
     if (tokens.empty()) return "-ERR empty command\r\n";
 
     std::string cmd = tokens[0];

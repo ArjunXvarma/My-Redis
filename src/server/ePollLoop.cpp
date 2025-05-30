@@ -66,6 +66,7 @@ void EPollLoop::run() {
 
                 setNonBlocking(client_fd);
                 addEvent(client_fd, EPOLLIN);
+                // clientHandlers[client_fd] = ClientHandler(client_fd);
                 clientHandlers.emplace(client_fd, ClientHandler(client_fd));
 
                 std::cout << "New client connected: FD " << client_fd << std::endl;

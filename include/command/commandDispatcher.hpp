@@ -9,11 +9,12 @@
 #include "allCommands.hpp"
 #include "../protocol/RESPencoder.hpp"
 #include "../utils/GlobalThreadPool.hpp"
+#include "../server/TransactionContext.hpp"
 
 class CommandDispatcher {
 public:
     CommandDispatcher();
-    std::string dispatch(const std::vector<std::string>& args);
+    std::string dispatch(const std::vector<std::string>& tokens, TransactionContext& txn);
 
 private:
     std::unordered_map<std::string, std::unique_ptr<Command>> commandMap;
