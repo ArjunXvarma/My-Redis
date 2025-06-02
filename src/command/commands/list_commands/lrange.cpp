@@ -1,7 +1,7 @@
 #include "command/commands/list_commands/lrangeCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string LRangeCommand::execute(const std::vector<std::string>& args) {
+std::string LRangeCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 3) {
         return "-ERR wrong number of arguments for 'lrange'\r\n";
     }

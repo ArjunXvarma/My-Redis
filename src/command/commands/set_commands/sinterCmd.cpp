@@ -1,6 +1,6 @@
 #include "command/commands/set_commands/sinterCmd.hpp"
 
-std::string SInterCommand::execute(const std::vector<std::string>& args) {
+std::string SInterCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.empty()) {
         return "-ERR wrong number of arguments for 'sinter'\r\n";
     }

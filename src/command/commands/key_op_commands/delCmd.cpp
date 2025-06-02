@@ -1,6 +1,6 @@
 #include "command/commands/key_op_comamnds/delCmd.hpp"
 
-std::string DelCommand::execute(const std::vector<std::string>& args) {
+std::string DelCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.empty()) return "-ERR wrong number of arguments for 'del'\r\n";
 
     auto& ds = DataStore::getInstance(); // Get the singleton instance of the datastore

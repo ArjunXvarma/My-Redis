@@ -1,7 +1,7 @@
 #include "command/commands/list_commands/rpopCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string RPopCommand::execute(const std::vector<std::string>& args) {
+std::string RPopCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 2) {
         return "-ERR wrong number of arguments for 'rpop'\r\n";
     }

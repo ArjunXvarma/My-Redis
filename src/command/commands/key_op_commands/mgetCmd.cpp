@@ -1,6 +1,6 @@
 #include "command/commands/key_op_comamnds/mgetCmd.hpp"
 
-std::string MGetCommand::execute(const std::vector<std::string>& args) {
+std::string MGetCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.empty()) return "-ERR wrong number of arguments for 'MGET'\r\n";
     
     std::vector<std::optional<std::string>> response = DataStore::getInstance().mget(args);

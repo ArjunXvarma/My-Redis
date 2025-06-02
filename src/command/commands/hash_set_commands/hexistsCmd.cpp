@@ -1,6 +1,6 @@
 #include "command/commands/hash_set_commands/hexistsCmd.hpp"
 
-std::string HExistsCommand::execute(const std::vector<std::string>& args) {
+std::string HExistsCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 2) 
         return "-ERR wrong number of arguments for 'hexists'\r\n";
 

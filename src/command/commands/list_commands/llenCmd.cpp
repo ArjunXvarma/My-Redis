@@ -1,7 +1,7 @@
 #include "command/commands/list_commands/llenCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string LLenCommand::execute(const std::vector<std::string>& args) {
+std::string LLenCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 1) {
         return "-ERR wrong number of arguments for 'llen'\r\n";
     }

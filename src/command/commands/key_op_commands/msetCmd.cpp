@@ -1,6 +1,6 @@
 #include "command/commands/key_op_comamnds/msetCmd.hpp"
 
-std::string MSetCommand::execute(const std::vector<std::string>& args) {
+std::string MSetCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.empty() || args.size() & 1) {
         return "-ERR wrong number of arguments for 'mset'\r\n";
     }

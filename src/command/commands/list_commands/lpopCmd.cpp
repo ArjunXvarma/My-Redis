@@ -1,7 +1,7 @@
 #include "command/commands/list_commands/lpopCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string LPopCommand::execute(const std::vector<std::string>& args) {
+std::string LPopCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 2) {
         return "-ERR wrong number of arguments for 'lpop'\r\n";
     }

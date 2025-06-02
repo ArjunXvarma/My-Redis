@@ -1,7 +1,7 @@
 #include "command/commands/hash_set_commands/hgetCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string HGetCommand::execute(const std::vector<std::string>& args) {
+std::string HGetCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 2) {
         return "-ERR wrong number of arguments for 'hget'\r\n";
     }

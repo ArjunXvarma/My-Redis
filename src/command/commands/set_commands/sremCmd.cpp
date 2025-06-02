@@ -1,7 +1,7 @@
 #include "command/commands/set_commands/sremCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string SRemCommand::execute(const std::vector<std::string>& args) {
+std::string SRemCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() < 2) {
         return "-ERR wrong number of arguments for 'srem'\r\n";
     }

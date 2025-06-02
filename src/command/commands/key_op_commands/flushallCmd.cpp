@@ -1,6 +1,6 @@
 #include "command/commands/key_op_comamnds/flushallCmd.hpp"
 
-std::string FlushAllCommand::execute(const std::vector<std::string>& args) {
+std::string FlushAllCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() > 1) return "-ERR wrong number of arguments for 'flushall'\r\n";
 
     auto& ds = DataStore::getInstance();

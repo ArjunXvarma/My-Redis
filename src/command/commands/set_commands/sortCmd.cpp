@@ -1,6 +1,6 @@
 #include "command/commands/set_commands/sortCmd.hpp"
 
-std::string SortCommand::execute(const std::vector<std::string>& args) {
+std::string SortCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.empty()) {
         return "-ERR wrong number of arguments for 'sort'\r\n";
     }

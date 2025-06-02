@@ -1,7 +1,7 @@
 #include "command/commands/set_commands/smembersCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string SMembersCommand::execute(const std::vector<std::string>& args) {
+std::string SMembersCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 1) {
         return "-ERR wrong number of arguments for 'smembers'\r\n";
     }

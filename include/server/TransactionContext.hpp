@@ -5,5 +5,5 @@
 
 struct TransactionContext {
     bool in_transaction = false;
-    std::vector<std::string> queued_commands;
+    std::vector<std::vector<std::string>> queued_commands;
 };

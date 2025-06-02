@@ -1,7 +1,7 @@
 #include "command/commands/set_commands/saddCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string SAddCommand::execute(const std::vector<std::string>& args) {
+std::string SAddCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() < 2) {
         return "-ERR wrong number of arguments for 'sadd'\r\n";
     }

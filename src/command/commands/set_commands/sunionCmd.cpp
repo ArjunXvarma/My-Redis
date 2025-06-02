@@ -1,6 +1,6 @@
 #include "command/commands/set_commands/sunionCmd.hpp"
 
-std::string SUnionCommand::execute(const std::vector<std::string>& args) {
+std::string SUnionCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.empty()) {
         return "-ERR wrong number of arguments for 'sunion'\r\n";
     }

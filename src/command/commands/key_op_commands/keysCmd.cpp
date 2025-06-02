@@ -1,6 +1,6 @@
 #include "command/commands/key_op_comamnds/keysCmd.hpp"
 
-std::string KeysCommand::execute(const std::vector<std::string>& args) {
+std::string KeysCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (!args.empty()) return "-ERR wrong number of arguments for 'keys'\r\n";
 
     auto& ds = DataStore::getInstance();

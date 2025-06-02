@@ -1,7 +1,7 @@
 #include "command/commands/hash_set_commands/hsetCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string HSetCommand::execute(const std::vector<std::string>& args) {
+std::string HSetCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() < 3 || args.size() % 2 != 1) {
         return "-ERR wrong number of arguments for 'hset'\r\n";
     }

@@ -1,7 +1,7 @@
 #include "command/commands/hash_set_commands/hgetallCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string HGetAllCommand::execute(const std::vector<std::string>& args) {
+std::string HGetAllCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() != 1) {
         return "-ERR wrong number of arguments for 'hgetall'\r\n";
     }

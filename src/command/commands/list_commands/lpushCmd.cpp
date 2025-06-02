@@ -1,7 +1,7 @@
 #include "command/commands/list_commands/lpushCmd.hpp"
 #include "datastore/datastore.hpp"
 
-std::string LPushCommand::execute(const std::vector<std::string>& args) {
+std::string LPushCommand::execute(const std::vector<std::string>& args, TransactionContext& txn) {
     if (args.size() < 2) {
         return "-ERR wrong number of arguments for 'lpush'\r\n";
     }
