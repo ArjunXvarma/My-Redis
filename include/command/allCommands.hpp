@@ -29,3 +29,7 @@
 #include "commands/set_commands/sortCmd.hpp"
 #include "commands/set_commands/sunionCmd.hpp"
 #include "commands/set_commands/sinterCmd.hpp"
+
+#include "commands/transactional_commands/DiscardCmd.hpp"
+#include "commands/transactional_commands/ExecCmd.hpp"
+#include "commands/transactional_commands/MultiCmd.hpp"
