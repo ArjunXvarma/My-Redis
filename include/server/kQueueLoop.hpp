@@ -17,6 +17,7 @@ private:
     int kq;
     uintptr_t serverSocketFd;
     std::unordered_set<int> registered_fds;
+    std::unordered_map<int, ClientHandler> clientHandlers;
     
 public:
     KQueueLoop(int serverSocketFd);
