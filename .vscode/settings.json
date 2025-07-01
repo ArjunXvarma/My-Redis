@@ -74,6 +74,17 @@
         "thread": "cpp",
         "utility": "cpp",
         "condition_variable": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "codecvt": "cpp",
+        "forward_list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "iterator": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "cinttypes": "cpp",
+        "shared_mutex": "cpp"
     }
 }

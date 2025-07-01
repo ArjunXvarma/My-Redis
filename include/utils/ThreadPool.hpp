@@ -1,42 +1,39 @@
 #pragma once
 
-#include <condition_variable>
-#include <functional>
-#include <future>
-#include <thread>
-#include <mutex>
-#include <queue>
 #include <vector>
-
+#include <thread>
+#include <future>
+#include <atomic>
+#include <type_traits>
 #include "Queue.hpp"
+#include "common.hpp"
+#include "WorkStealingQueue.hpp"
 
 class ThreadPool {
+    using task_type = function_wrapper;
+
+    std::atomic_bool done;
+    Queue<task_type> global_queue;
+    std::vector<std::unique_ptr<WorkStealingQueue>> queues;
+    std::vector<std::thread> threads;
+    join_threads joiner;
+
+    static thread_local WorkStealingQueue* local_queue;
+    static thread_local unsigned my_index;
+
+    void worker_thread(unsigned my_index_);
+    bool pop_task_from_local_queue(task_type& task);
+    bool pop_task_from_pool_queue(task_type& task);
+    bool pop_task_from_other_thread(task_type& task);
+
 public:
-    explicit ThreadPool(size_t num_threads = std::thread::hardware_concurrency());
+    ThreadPool();
     ~ThreadPool();
 
-    template <typename F, typename... Args>
-    auto enqueue(F&& f, Args&&... args) -> std::future<std::invoke_result_t<F, Args...>> {
-        using return_type = std::invoke_result_t<F, Args...>;
+    template<typename FunctionType>
+    auto enqueue(FunctionType f) -> std::future<std::invoke_result_t<FunctionType>>;
 
-        auto task_ptr = std::make_shared<std::packaged_task<return_type()>>(
-            std::bind(std::forward<F>(f), std::forward<Args>(args)...)
-        );
-
-        std::future<return_type> res = task_ptr->get_future();
-        {
-            std::unique_lock<std::mutex> lock(m);
-            task_queue.push([task_ptr]() { (*task_ptr)(); });
-        }
-
-        cv.notify_one();
-        return res;
-    }
-
-private:
-    size_t num_threads;
-    std::vector<std::jthread> threads;
-    Queue<std::function<void()>> task_queue;
-    std::mutex m;
-    std::condition_variable cv;
+    void run_pending_task();
 };
+
+#include "../src/utils/ThreadPool.tpp"

@@ -34,3 +34,6 @@ build/
 *~
 *.bak
 *main
+
+test/correctness/__pycache__
+test/utils/__pycache__

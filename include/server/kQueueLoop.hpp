@@ -8,6 +8,7 @@
 #include <vector>
 #include <sys/socket.h>
 #include <fcntl.h>
+#include <memory>
 
 #include "clientHandler.hpp"
 #include "eventLoop.hpp"
@@ -17,7 +18,7 @@ private:
     int kq;
     uintptr_t serverSocketFd;
     std::unordered_set<int> registered_fds;
-    std::unordered_map<int, ClientHandler> clientHandlers;
+    std::unordered_map<int, std::shared_ptr<ClientHandler>> clientHandlers;
     
 public:
     KQueueLoop(int serverSocketFd);
@@ -26,6 +27,10 @@ public:
     void addEvent(int fd, uint32_t events) override;
     void removeEvent(int fd) override;
     void run() override;
+
+    void handleNewConnection();
+    void handleClientEvent(int clientSocketFd);
+    void cleanupDeadFds();
 };
 
 #endif
