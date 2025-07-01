@@ -1,54 +1,26 @@
+#include "server/clientHandler.hpp"
+#include "utils/GlobalThreadPool.hpp"
+#include "protocol/RESPparser.hpp"
+#include "protocol/RESPencoder.hpp"
+#include <mutex>
 #include <sstream>
 #include <iostream>
-#include <vector>
-#include <sys/socket.h> 
 #include <unistd.h>
+#include <algorithm>
+#include <sys/socket.h>
 #include <cstring>
-#include "server/clientHandler.hpp"
 
-void ClientHandler::sendError(const std::string& msg) {
-    std::string error = RESPEncoder::encodeError(msg);
-    send(socket_fd, error.c_str(), error.size(), 0);
-}
+extern ThreadPool globalThreadPool;
 
+ClientHandler::ClientHandler(int fd) : socket_fd(fd) {}
 
-void ClientHandler::sendResponse(const std::string& response) {
-    std::future<std::string> futureEncoded = 
-        globalThreadPool.enqueue(RESPEncoder::encodeBulkString, response);
-    std::string encoded = futureEncoded.get();
+bool ClientHandler::handle() {
+    std::string input;
+    if (!readFromSocket(input)) return false;
 
-    size_t totalSent = 0;
-    while (totalSent < encoded.size()) {
-        ssize_t sent = send(socket_fd, encoded.c_str() + totalSent, encoded.size() - totalSent, 0);
-        if (sent <= 0) {
-            perror("send failed");
-            break;
-        }
-        totalSent += sent;
-    }
-}
+    dispatchToThreadPool(input);
 
-std::vector<std::string> ClientHandler::parseInput(const std::string& input) {
-    std::future<std::vector<std::string>> futureTokens = 
-        globalThreadPool.enqueue(RESPParser::parse, input);
-    return futureTokens.get();
-}
-
-std::string ClientHandler::processCommand(const std::vector<std::string>& tokens) {
-    std::string cmd = tokens[0];
-    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
-
-    if (txn.in_transaction && cmd != "EXEC" && cmd != "DISCARD" && cmd != "MULTI") {
-        std::ostringstream oss;
-        for (const auto& t : tokens) {
-            oss << t << " ";
-        }
-        txn.queued_commands.push_back(tokens);
-        return "+QUEUED";
-    }
-
-    CommandDispatcher dispatcher;
-    return dispatcher.dispatch(tokens, txn);  // pass txn by ref
+    return true;
 }
 
 bool ClientHandler::readFromSocket(std::string& input) {
@@ -69,17 +41,54 @@ bool ClientHandler::readFromSocket(std::string& input) {
     return true;
 }
 
-bool ClientHandler::handle() {
-    std::string input;
-    if (!readFromSocket(input)) return false;
+void ClientHandler::dispatchToThreadPool(const std::string& input) {
+    auto self = shared_from_this();
 
-    std::vector<std::string> tokens = parseInput(input);
+    globalThreadPool.enqueue([self, input]() {
+        self->handleCommand(input);
+    });
+}
+
+void ClientHandler::handleCommand(const std::string& input) {
+    auto tokens = RESPParser::parse(input);
     if (tokens.empty()) {
         sendError("Invalid or incomplete command");
-        return true;
+        return;
     }
 
-    std::string response = processCommand(tokens);
+    std::string cmd = tokens[0];
+    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
+
+    std::string response;
+
+    if (txn.in_transaction && cmd != "EXEC" && cmd != "DISCARD" && cmd != "MULTI") {
+        txn.queued_commands.push_back(tokens);
+        response = "+QUEUED";
+    } else {
+        CommandDispatcher dispatcher;
+        response = dispatcher.dispatch(tokens, txn);
+    }
+
     sendResponse(response);
-    return true;
+}
+
+void ClientHandler::sendError(const std::string& msg) {
+    std::string error = RESPEncoder::encodeError(msg);
+    std::lock_guard<std::mutex> lock(write_mutex);
+    send(socket_fd, error.c_str(), error.size(), 0);
+}
+
+void ClientHandler::sendResponse(const std::string& response) {
+    std::string encoded = RESPEncoder::encodeBulkString(response);
+    std::lock_guard<std::mutex> lock(write_mutex);
+
+    size_t totalSent = 0;
+    while (totalSent < encoded.size()) {
+        ssize_t sent = send(socket_fd, encoded.c_str() + totalSent, encoded.size() - totalSent, 0);
+        if (sent <= 0) {
+            perror("send failed");
+            break;
+        }
+        totalSent += sent;
+    }
 }
