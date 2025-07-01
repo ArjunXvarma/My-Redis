@@ -1,21 +1,32 @@
 #pragma once
 
 #include <unordered_map>
+#include <map>
+#include <array>
 #include <string>
 #include <optional>
 #include <iostream>
 #include <mutex>
+#include <shared_mutex>
 #include <vector>
 #include <algorithm>
 
 #include "../persistence/persistenceManager.hpp"
 #include "Value.hpp"
 
+static constexpr size_t NUM_SHARDS = 32;
+
+struct Shard {
+    std::unordered_map<std::string, Value> map;
+    mutable std::shared_mutex mutex;
+};
+
+extern std::array<Shard, NUM_SHARDS> shards;
+
+size_t getShardIndex(const std::string& key);
+bool shardExists(const std::string& key);
+
 class DataStore {
-private:
-    std::unordered_map<std::string, Value> store;
-    mutable std::mutex m;
-    
 public:
     DataStore();
     DataStore(const DataStore&) = delete;

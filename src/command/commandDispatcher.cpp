@@ -1,9 +1,9 @@
 #include "command/commandDispatcher.hpp"
 #include "utils/GlobalThreadPool.hpp"
 
-#ifdef __linux__
+// #ifdef __linux__
 ThreadPool globalThreadPool;
-#endif
+// #endif
 
 bool isTransactionCommand(const std::string& cmd) {
     return cmd == "MULTI" || cmd == "EXEC" || cmd == "DISCARD";
