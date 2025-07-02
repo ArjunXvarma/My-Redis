@@ -37,3 +37,4 @@ build/
 
 test/correctness/__pycache__
 test/utils/__pycache__
+.pytest_cache

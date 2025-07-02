@@ -1,4 +1,5 @@
 #include "utils/ThreadPool.hpp"
+#include <iostream>
 
 thread_local WorkStealingQueue* ThreadPool::local_queue = nullptr;
 thread_local unsigned ThreadPool::my_index = 0;
@@ -47,9 +48,15 @@ bool ThreadPool::pop_task_from_other_thread(task_type& task) {
 }
 
 void ThreadPool::run_pending_task() {
-    task_type task;
-    if (pop_task_from_local_queue(task) || pop_task_from_pool_queue(task) || pop_task_from_other_thread(task))
-        task();
-    else
-        std::this_thread::yield();
+    try {
+        task_type task;
+        if (pop_task_from_local_queue(task) || pop_task_from_pool_queue(task) || pop_task_from_other_thread(task))
+            task();
+        else
+            std::this_thread::yield();
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << '\n';
+    }
+    
 }
